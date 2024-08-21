@@ -5,18 +5,17 @@ import environ
 from datetime import timedelta
 import stripe
 
+env = environ.Env()
+environ.Env.read_env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
-SECRET_KEY = "django-insecure-#g+24!*yh@0l6skj2!_u(=pbtaob(=yyb)4x)0vv&fs&=7f!_e"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-STRIPE_TEST_SECRET_KEY = 'sk_test_51Pq255AxQcSK7FmoDMwhvLtEfpZBS0yDCVzo5rfbPhObsYAWzvYeM8xaf9iCh5BNp3mw2Ib0N0Rbw4c3SogQX6Ev00MJdZzUC0'
-STRIPE_TEST_PUBLIC_KEY =  'pk_test_51Pq255AxQcSK7Fmo5pDvxR5ks7MilzdDibWgKLHLZorigB6atypcWNv4QERLxtPF0AtkXDNxsgqS4PRYcZ1qyMC700pL971Qbn'
+STRIPE_TEST_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'your-secret-key')
+STRIPE_TEST_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', 'your-publishable-key')
 
 stripe.api_key = STRIPE_TEST_SECRET_KEY
 
@@ -86,12 +85,12 @@ WSGI_APPLICATION = "myproject.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'skypro',
-        'USER': 'postgres',
-        'PASSWORD': 'skypro',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': env('DATABASE_ENGINE'),
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env.int('DATABASE_PORT', default=5432),
     }
 }
 
